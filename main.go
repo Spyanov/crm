@@ -2,35 +2,37 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"github.com/go-martini/martini"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"net/http"
+	"time"
 )
 
 const (
-	host       = "db.xkc1.ru:3306"
-	database   = "crm"
-	username   = "admin"
-	password   = "NUjFcwmP!666999"
-	collection = "crm"
-	userId     = "e7429bbeab5fa68668e3de2fd2d3484b8e55053ffbd2c1d5bd896ae07067d17e"
+	host     = "db.xkc1.ru:3306"
+	database = "crm"
+	username = "admin"
+	password = "NUjFcwmP!666999"
 )
 
 type toDoList struct {
-	Id          string `json:"id"`
-	Visible     string `json:"visible"`
-	Client      string `json:"client"`
-	DealTitle   string `json:"deal_title"`
-	DealDesc    string `json:"deal_desc"`
-	Price       string `json:"price"`
-	StartPeriod string `json:"start_period"`
-	EndPeriod   string `json:"end_period"`
-	Status      string `json:"status"`
-	Resul       string `json:"resul"`
+	Id          int       `json:"id"`
+	Visible     bool      `json:"visible"`
+	Client      string    `json:"client"`
+	DealTitle   string    `json:"deal_title"`
+	DealDesc    string    `json:"deal_desc"`
+	Price       int       `json:"price"`
+	StartPeriod time.Time `json:"start_period"`
+	EndPeriod   time.Time `json:"end_period"`
+	Status      string    `json:"status"`
+	Resul       string    `json:"resul"`
 }
 
-func dbconnect() {
-	connectonString := username + ":" + password + "@tcp(" + host + ")/" + database
+func dbconnect(w http.ResponseWriter) {
+	connectonString := username + ":" + password + "@tcp(" + host + ")/" + database + "?parseTime=true"
 
 	db, err := sql.Open("mysql", connectonString)
 	if err != nil {
@@ -62,15 +64,21 @@ func dbconnect() {
 		arr = append(arr, cell)
 	}
 
-	for _, v := range arr {
-		fmt.Println("arr = ", v)
+	toJson, err := json.Marshal(arr)
+	if err != nil {
+		fmt.Println("Ошибка конвертации в Json")
 	}
 
+	w.Write(toJson)
 }
 
 func main() {
 
-	dbconnect()
+	m := martini.Classic()
 
 	fmt.Println("run")
+
+	m.Get("/", dbconnect)
+	m.RunOnAddr(":8000")
+
 }
