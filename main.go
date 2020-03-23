@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/go-martini/martini"
 	_ "github.com/go-sql-driver/mysql"
+	"html/template"
 	"log"
 	"net/http"
 	"time"
@@ -17,6 +18,43 @@ const (
 	username = "admin"
 	password = "NUjFcwmP!666999"
 )
+
+func f_addStaticFolders(m martini.ClassicMartini) {
+	staticHTML := martini.StaticOptions{Prefix: "html"}
+	m.Use(martini.Static("html", staticHTML))
+
+	staticCSS := martini.StaticOptions{Prefix: "css"}
+	m.Use(martini.Static("html/css", staticCSS))
+
+	staticIMG := martini.StaticOptions{Prefix: "img"}
+	m.Use(martini.Static("html/img", staticIMG))
+	staticVUE := martini.StaticOptions{Prefix: "vue"}
+	m.Use(martini.Static("html/vue", staticVUE))
+	staticJS := martini.StaticOptions{Prefix: "js"}
+	m.Use(martini.Static("html/js", staticJS))
+	staticFONTS := martini.StaticOptions{Prefix: "fonts"}
+	m.Use(martini.Static("html/fonts", staticFONTS))
+
+	staticTPL := martini.StaticOptions{Prefix: "tpl"}
+	m.Use(martini.Static("html/tpl", staticTPL))
+}
+
+func f_checkErr(err error) {
+	if err != nil {
+		log.Println("***[ERROR***]", err.Error())
+		panic(err.Error())
+	}
+}
+
+func f_tpl() *template.Template {
+
+	tmpl, err := template.New("").Delims("[[[", "]]]").ParseFiles(
+		"html/index.html",
+	)
+
+	f_checkErr(err)
+	return tmpl
+}
 
 type toDoList struct {
 	Id          int       `json:"id"`
@@ -31,23 +69,10 @@ type toDoList struct {
 	Resul       string    `json:"resul"`
 }
 
-func dbconnect(w http.ResponseWriter) {
-	connectonString := username + ":" + password + "@tcp(" + host + ")/" + database + "?parseTime=true"
+func getAllData(w http.ResponseWriter) {
 
-	db, err := sql.Open("mysql", connectonString)
-	if err != nil {
-		panic(err.Error()) // Just for example purpose. You should use proper error handling instead of panic
-	}
+	db := dbconnect()
 	defer db.Close()
-
-	// Open doesn't open a connection. Validate DSN data:
-	err = db.Ping()
-	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
-	} else {
-		log.Println("db connect successfully")
-	}
-
 	rows, err := db.Query("SELECT * FROM todolist")
 	if err != nil {
 		fmt.Println("[dbconnect] Ошибка запроса в БД", err)
@@ -72,13 +97,38 @@ func dbconnect(w http.ResponseWriter) {
 	w.Write(toJson)
 }
 
+func dbconnect() *sql.DB {
+	connectonString := username + ":" + password + "@tcp(" + host + ")/" + database + "?parseTime=true"
+
+	db, err := sql.Open("mysql", connectonString)
+	if err != nil {
+		panic(err.Error()) // Just for example purpose. You should use proper error handling instead of panic
+	}
+
+	// Open doesn't open a connection. Validate DSN data:
+	err = db.Ping()
+	if err != nil {
+		panic(err.Error()) // proper error handling instead of panic in your app
+	} else {
+		log.Println("db connect successfully")
+	}
+
+	return db
+}
+
+func index(w http.ResponseWriter) {
+	f_tpl().ExecuteTemplate(w, "index", nil)
+}
+
 func main() {
 
 	m := martini.Classic()
+	f_addStaticFolders(*m)
 
 	fmt.Println("run")
 
-	m.Get("/", dbconnect)
-	m.RunOnAddr(":8000")
+	m.Get("/", index)
+	m.Get("/data", getAllData)
+	m.RunOnAddr(":3000")
 
 }
