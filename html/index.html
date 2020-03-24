@@ -27,13 +27,31 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-12">
+    <div class="col-2">
 
       <div id="app">
-        {{ arrJson }}
-      </div>
 
+        <div v-for="todo in arrJson">
+
+          <!-- Card -->
+          <div class="card">
+            <!-- Card content -->
+            <div class="card-body">
+              <p class="card-text">{{todo.client}}</p>
+              <hr>
+              <p class="card-title"><a>{{todo.dealTitle}}</a></p>
+              <hr>
+              <p class="card-text">{{todo.price}}</p>
+              <p class="card-text">{{todo.startPeriod}} {{todo.endPeriod}}</p>
+              <p class="card-text">{{todo.status}}</p>
+            </div>
+          </div>
+          <!-- Card -->
+        </div>
+
+      </div>
     </div>
+
   </div>
 </div>
 

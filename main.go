@@ -60,13 +60,25 @@ type toDoList struct {
 	Id          int       `json:"id"`
 	Visible     bool      `json:"visible"`
 	Client      string    `json:"client"`
-	DealTitle   string    `json:"deal_title"`
-	DealDesc    string    `json:"deal_desc"`
+	DealTitle   string    `json:"dealTitle"`
+	DealDesc    string    `json:"dealDesc"`
 	Price       int       `json:"price"`
-	StartPeriod time.Time `json:"start_period"`
-	EndPeriod   time.Time `json:"end_period"`
+	StartPeriod time.Time `json:"startPeriod"`
+	EndPeriod   time.Time `json:"endPeriod"`
 	Status      string    `json:"status"`
 	Resul       string    `json:"resul"`
+}
+
+type page struct {
+	TitlePage string     `json:"titlePage"`
+	StatusArr []string   `json:"statusArr"`
+	Status1   []toDoList `json:"status_1"`
+	Status2   []toDoList `json:"status_2"`
+	Status3   []toDoList `json:"status_3"`
+	Status4   []toDoList `json:"status_4"`
+	Status5   []toDoList `json:"status_5"`
+	Status6   []toDoList `json:"status_6"`
+	Status7   []toDoList `json:"status_7"`
 }
 
 func getAllData(w http.ResponseWriter) {
@@ -89,7 +101,11 @@ func getAllData(w http.ResponseWriter) {
 		arr = append(arr, cell)
 	}
 
-	toJson, err := json.Marshal(arr)
+	var globalPage page
+
+	globalPage.Status1 = arr
+
+	toJson, err := json.Marshal(globalPage)
 	if err != nil {
 		fmt.Println("Ошибка конвертации в Json")
 	}
