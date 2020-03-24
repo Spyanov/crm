@@ -25,33 +25,159 @@
 </head>
 <body>
 
-<div class="container">
-  <div class="row">
-    <div class="col-2">
 
-      <div id="app">
 
-        <div v-for="todo in arrJson">
 
-          <!-- Card -->
-          <div class="card">
-            <!-- Card content -->
-            <div class="card-body">
-              <p class="card-text">{{todo.client}}</p>
-              <hr>
-              <p class="card-title"><a>{{todo.dealTitle}}</a></p>
-              <hr>
-              <p class="card-text">{{todo.price}}</p>
-              <p class="card-text">{{todo.startPeriod}} {{todo.endPeriod}}</p>
-              <p class="card-text">{{todo.status}}</p>
-            </div>
-          </div>
-          <!-- Card -->
+
+
+
+
+<div class="container-fluid" id="app">
+  <!-- Central Modal Small -->
+  <div v-for=" modal in arrJson.status_1 " class="modal fade" :id="'modal'+modal.id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+
+    <!-- Change class .modal-sm to change the size of the modal -->
+    <div class="modal-dialog modal-sm" role="document">
+
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title w-100" id="myModalLabel">{{modal.dealTitle}}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btn-sm">Save changes</button>
+        </div>
       </div>
     </div>
+  </div>
+  <!-- Central Modal Small -->
 
+
+
+
+
+
+
+
+  <div class="row">
+    <div class="col-12">
+      <div class="container-fluid">
+        <div class="row">
+
+          <!-- status1 -->
+          <div  class="col-2">
+            <button class="w-100 btnHeader z-depth-1">Потенциальная идея</button>
+            <div v-for="todo in arrJson.status_1" class="card">
+              <a data-toggle="modal" :data-target="'#modal'+todo.id">
+              <div class="card-body">
+                <p class="card-text">{{todo.client}}</p>
+                <hr>
+                <p class="card-title">{{todo.dealTitle}}</p>
+                <hr>
+                <p class="card-text">{{todo.price}}</p>
+                <p class="card-text">{{todo.startPeriod}} {{todo.endPeriod}}</p>
+              </div>
+              </a>
+            </div>
+          </div>
+          <!-- status1 -->
+
+          <!-- status1 -->
+          <div  class="col-2">
+            <button class="w-100 btnHeader z-depth-1">Предложение</button>
+            <div v-for="todo in arrJson.status_2" class="card">
+              <div class="card-body">
+                <p class="card-text">{{todo.client}}</p>
+                <hr>
+                <p class="card-title">{{todo.dealTitle}}</p>
+                <hr>
+                <p class="card-text">{{todo.price}}</p>
+                <p class="card-text">{{todo.startPeriod}} {{todo.endPeriod}}</p>
+                <p class="card-text">{{todo.status}}</p>
+              </div>
+            </div>
+          </div>
+          <!-- status1 -->
+
+          <!-- status1 -->
+          <div  class="col-2">
+            <button class="w-100 btnHeader z-depth-1">Согласование, подготовка</button>
+            <div v-for="todo in arrJson.status_3" class="card">
+              <div class="card-body">
+                <p class="card-text">{{todo.client}}</p>
+                <hr>
+                <p class="card-title"><a>{{todo.dealTitle}}</a></p>
+                <hr>
+                <p class="card-text">{{todo.price}}</p>
+                <p class="card-text">{{todo.startPeriod}} {{todo.endPeriod}}</p>
+                <p class="card-text">{{todo.status}}</p>
+              </div>
+            </div>
+          </div>
+          <!-- status1 -->
+
+
+          <!-- status1 -->
+          <div  class="col-2">
+            <button class="w-100 btnHeader z-depth-1">В работе</button>
+            <div v-for="todo in arrJson.status_5" class="card">
+              <div class="card-body">
+                <p class="card-text">{{todo.client}}</p>
+                <hr>
+                <p class="card-title"><a>{{todo.dealTitle}}</a></p>
+                <hr>
+                <p class="card-text">{{todo.price}}</p>
+                <p class="card-text">{{todo.startPeriod}} {{todo.endPeriod}}</p>
+                <p class="card-text">{{todo.status}}</p>
+              </div>
+            </div>
+          </div>
+          <!-- status1 -->
+
+          <!-- status1 -->
+          <div  class="col-2">
+            <button class="w-100 btnHeader z-depth-1">Закрытие</button>
+            <div v-for="todo in arrJson.status_6" class="card">
+              <div class="card-body">
+                <p class="card-text">{{todo.client}}</p>
+                <hr>
+                <p class="card-title"><a>{{todo.dealTitle}}</a></p>
+                <hr>
+                <p class="card-text">{{todo.price}}</p>
+                <p class="card-text">{{todo.startPeriod}} {{todo.endPeriod}}</p>
+                <p class="card-text">{{todo.status}}</p>
+              </div>
+            </div>
+          </div>
+          <!-- status1 -->
+
+          <!-- status1 -->
+          <div  class="col-2">
+            <button class="w-100 btnHeader z-depth-1">Ждем оплаты</button>
+            <div v-for="todo in arrJson.status_7" class="card">
+              <div class="card-body">
+                <p class="card-text">{{todo.client}}</p>
+                <hr>
+                <p class="card-title"><a>{{todo.dealTitle}}</a></p>
+                <hr>
+                <p class="card-text">{{todo.price}}</p>
+                <p class="card-text">{{todo.startPeriod}} {{todo.endPeriod}}</p>
+                <p class="card-text">{{todo.status}}</p>
+              </div>
+            </div>
+          </div>
+          <!-- status1 -->
+      </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -78,7 +204,7 @@
     var app = new Vue({
       el: '#app',
       data: {
-        arrJson:null,
+        arrJson:[],
       },
       mounted(){
         axios.get("http://localhost:3000/data").then( response =>{

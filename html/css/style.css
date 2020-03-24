@@ -1,0 +1,26 @@
+body{
+    background-color: #eee;
+}
+
+.btnHeader{
+    font-size: .9rem;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+    //margin-top: 1rem;
+    margin-bottom: 1rem;
+    height: 4rem;
+    border: none;
+    //background-color: #dedede;
+
+
+}
+
+.card .card-body .card-text {
+    font-size: .8rem;
+    font-weight: 400;
+    color: #747373;
+    text-align: center;
+    margin:0;
+    padding: 0;
+}

@@ -85,25 +85,124 @@ func getAllData(w http.ResponseWriter) {
 
 	db := dbconnect()
 	defer db.Close()
-	rows, err := db.Query("SELECT * FROM todolist")
+
+	var cell toDoList
+	var status1, status2, status3, status4, status5, status6 []toDoList
+
+	// status 1
+	rows, err := db.Query("SELECT * FROM todolist WHERE status='Потенциальная идея'")
 	if err != nil {
 		fmt.Println("[dbconnect] Ошибка запроса в БД", err)
 	}
-
-	var cell toDoList
-	var arr []toDoList
 
 	for rows.Next() {
 		err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
 		if err != nil {
 			fmt.Println("Ошибка сканирования строки результата", err)
 		}
-		arr = append(arr, cell)
+		status1 = append(status1, cell)
 	}
+	// status 1
+
+	// status 2
+	rows, err = db.Query("SELECT * FROM todolist WHERE status='Предложение'")
+	if err != nil {
+		fmt.Println("[dbconnect] Ошибка запроса в БД", err)
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
+		if err != nil {
+			fmt.Println("Ошибка сканирования строки результата", err)
+		}
+		status2 = append(status2, cell)
+	}
+	// status 2
+
+	// status 3
+	rows, err = db.Query("SELECT * FROM todolist WHERE status='Согласование'")
+	if err != nil {
+		fmt.Println("[dbconnect] Ошибка запроса в БД", err)
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
+		if err != nil {
+			fmt.Println("Ошибка сканирования строки результата", err)
+		}
+		status3 = append(status3, cell)
+	}
+	// status 3
+
+	// status 3
+	rows, err = db.Query("SELECT * FROM todolist WHERE status='Согласование, подготовка'")
+	if err != nil {
+		fmt.Println("[dbconnect] Ошибка запроса в БД", err)
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
+		if err != nil {
+			fmt.Println("Ошибка сканирования строки результата", err)
+		}
+		status3 = append(status3, cell)
+	}
+	// status 3
+
+	// status 4
+	rows, err = db.Query("SELECT * FROM todolist WHERE status='В работе'")
+	if err != nil {
+		fmt.Println("[dbconnect] Ошибка запроса в БД", err)
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
+		if err != nil {
+			fmt.Println("Ошибка сканирования строки результата", err)
+		}
+		status4 = append(status4, cell)
+	}
+	// status 4
+
+	// status 5
+	rows, err = db.Query("SELECT * FROM todolist WHERE status='Закрытие'")
+	if err != nil {
+		fmt.Println("[dbconnect] Ошибка запроса в БД", err)
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
+		if err != nil {
+			fmt.Println("Ошибка сканирования строки результата", err)
+		}
+		status5 = append(status5, cell)
+	}
+	// status 5
+
+	// status 6
+	rows, err = db.Query("SELECT * FROM todolist WHERE status='Ждем оплаты'")
+	if err != nil {
+		fmt.Println("[dbconnect] Ошибка запроса в БД", err)
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
+		if err != nil {
+			fmt.Println("Ошибка сканирования строки результата", err)
+		}
+		status6 = append(status6, cell)
+	}
+	// status 6
 
 	var globalPage page
 
-	globalPage.Status1 = arr
+	globalPage.Status1 = status1
+	globalPage.Status2 = status2
+	globalPage.Status3 = status3
+	globalPage.Status4 = status4
+	globalPage.Status5 = status5
+	globalPage.Status6 = status6
+	//globalPage.Status7 = status7
 
 	toJson, err := json.Marshal(globalPage)
 	if err != nil {
