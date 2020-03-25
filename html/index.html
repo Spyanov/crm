@@ -40,10 +40,13 @@
               <hr :class="'separator'+count">
             </div>
             <div v-for="todo in column.arrayInColumn">
-              <render-item :client=todo.client :id="todo.id" :title="todo.dealTitle" :desc="todo.dealDesc" :price="todo.price" :start="todo.startPeriod" :end="todo.endPeriod" :status="todo.status"></render-item>
+              <render-item :client=todo.client :id="todo.id" :title="todo.dealTitle" :desc="todo.dealDesc" :price="todo.price"
+                           :start="todo.startPeriod" :end="todo.endPeriod" :status="todo.status" :resultArr="arrJson.resultRegistry" :statusArr="arrJson.statusRegistry"></render-item>
             </div>
           </div>
           <!-- .вывод задач -->
+
+
         </div>
       </div>
     </div>
@@ -81,7 +84,9 @@
         start: String,
         end: String,
         status: String,
-        result: String
+        result: String,
+        statusArr: Array,
+        resultArr: Array,
       },
       computed:{
         calcStart(){
@@ -125,15 +130,71 @@
             <div class="modal-content">
 
 
-      <form action="" method="post">
-      <div class="container">
-        <div class="row">
-          <div class="col-8 title">{{this.title}}</div>
-          <div class="col-4">{{this.price}} <i class="fas fa-ruble-sign"></i></div>
-        </div>
+
+      <form action="" class="text-center border border-light p-5">
+      <div class="container inputBlock">
+      <div class="row">
+      <div class="col-12">
+      <h4>Редактирование
+      </h4>
       </div>
-        <p><input type="submit"></p>
+      </div>
+      <div class="row">
+      <div class="col-12">
+      <input type="text" class="form-control mb-4" placeholder="Пиранья">
+
+      </div>
+      </div>
+      <div class="row">
+      <div class="col-12">
+      <input type="text" class="form-control mb-4" placeholder="Заголовок задачи">
+
+      </div>
+      </div>
+      <div class="row">
+      <div class="col-12">
+      <input type="text" class="form-control mb-4" placeholder="Описание задачи">
+
+      </div>
+      </div>
+      <div class="row">
+      <div class="col-12">
+      <input type="text" class="form-control mb-4" placeholder="Цена">
+
+      </div>
+      </div>
+      <div class="row">
+      <div class="col-12">
+      <input type="text" class="form-control mb-4" placeholder="Начало">
+
+      </div>
+      </div>
+      <div class="row">
+      <div class="col-12">
+      <input type="text" class="form-control mb-4" placeholder="Конец">
+
+      </div>
+      </div>
+      <div class="row">
+      <div class="col-12">
+      <select class="browser-default custom-select mb-4" v-model="result">
+      <option value="" disabled="">Стадия</option>
+      <option v-for="result1 in this.resultArr" :value="result1" >{{result1}}</option>
+      </select>
+      </div>
+      </div>
+      <div class="row">
+      <div class="col-12">
+      <select class="browser-default custom-select mb-4" v-model="status">
+      <option value="" disabled="">Результат</option>
+      <option v-for="status1 in this.statusRegistry" :value="status1" >{{status1}}</option>
+      </select>
+      </div>
+      </div>
+      </div>
       </form>
+
+
 
 
 
@@ -165,10 +226,14 @@
       el: '#app',
       data: {
         arrJson:[],
+        statusRegistry:'',
+        resultRegistry:'',
       },
       mounted(){
         axios.get("/data").then( response =>{
           this.arrJson = response.data;
+          this.statusRegistry = this.arrJson.statusRegistry;
+          this.resultRegistry = this.arrJson.resultRegistry;
         })
 
       }

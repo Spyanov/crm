@@ -166,3 +166,7 @@ body{
 .separator5{
     border-bottom: 2px solid #ff0029;
 }
+
+.inputBlock{
+    color: white;
+}

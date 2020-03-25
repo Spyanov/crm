@@ -75,8 +75,10 @@ type columnArray struct {
 }
 
 type page struct {
-	TitlePage string        `json:"titlePage"`
-	DataArr   []columnArray `json:"dataArr"`
+	TitlePage      string        `json:"titlePage"`
+	DataArr        []columnArray `json:"dataArr"`
+	StatusRegistry []string      `json:"statusRegistry"`
+	ResultRegistry []string      `json:"resultRegistry"`
 }
 
 func getAllData(w http.ResponseWriter) {
@@ -88,6 +90,8 @@ func getAllData(w http.ResponseWriter) {
 
 	var trash int
 	var currentStatus string
+	var StatusRegistryArray []string
+	var ResultRegistryArray []string
 
 	// status arr
 	rowsList, err := db.Query("SELECT * FROM status ORDER BY id")
@@ -119,115 +123,25 @@ func getAllData(w http.ResponseWriter) {
 		currentColumnArray.ArrayInColumn = arrToDoListInCurrentCell
 		// .запрос на выборку всех данных по текущему статусу
 
+		StatusRegistryArray = append(StatusRegistryArray, currentStatus)
 		allDataPage.DataArr = append(allDataPage.DataArr, currentColumnArray)
 	}
 
-	// .status arr
+	rowsResultRegistry, err := db.Query("SELECT * FROM result ORDER BY id")
+	if err != nil {
+		fmt.Println("Ошибка запроса статусов акрытия из БД", err)
+	}
+	var ResultRegistry string
+	for rowsResultRegistry.Next() {
+		err = rowsResultRegistry.Scan(&trash, &ResultRegistry)
+		if err != nil {
+			fmt.Println("Ошибка сканирования строки статусов закрытия", err)
+		}
+		ResultRegistryArray = append(ResultRegistryArray, ResultRegistry)
+	}
 
-	//// status 1
-	//rows, err := db.Query("SELECT * FROM todolist WHERE status='Потенциальная идея'")
-	//if err != nil {
-	//	fmt.Println("[dbconnect] Ошибка запроса в БД", err)
-	//}
-	//
-	//for rows.Next() {
-	//	err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
-	//	if err != nil {
-	//		fmt.Println("Ошибка сканирования строки результата", err)
-	//	}
-	//	status1 = append(status1, cell)
-	//}
-	//// status 1
-	//
-	//// status 2
-	//rows, err = db.Query("SELECT * FROM todolist WHERE status='Предложение'")
-	//if err != nil {
-	//	fmt.Println("[dbconnect] Ошибка запроса в БД", err)
-	//}
-	//
-	//for rows.Next() {
-	//	err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
-	//	if err != nil {
-	//		fmt.Println("Ошибка сканирования строки результата", err)
-	//	}
-	//	status2 = append(status2, cell)
-	//}
-	//// status 2
-	//
-	//// status 3
-	//rows, err = db.Query("SELECT * FROM todolist WHERE status='Согласование'")
-	//if err != nil {
-	//	fmt.Println("[dbconnect] Ошибка запроса в БД", err)
-	//}
-	//
-	//for rows.Next() {
-	//	err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
-	//	if err != nil {
-	//		fmt.Println("Ошибка сканирования строки результата", err)
-	//	}
-	//	status3 = append(status3, cell)
-	//}
-	//// status 3
-	//
-	//// status 3
-	//rows, err = db.Query("SELECT * FROM todolist WHERE status='Согласование, подготовка'")
-	//if err != nil {
-	//	fmt.Println("[dbconnect] Ошибка запроса в БД", err)
-	//}
-	//
-	//for rows.Next() {
-	//	err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
-	//	if err != nil {
-	//		fmt.Println("Ошибка сканирования строки результата", err)
-	//	}
-	//	status3 = append(status3, cell)
-	//}
-	//// status 3
-	//
-	//// status 4
-	//rows, err = db.Query("SELECT * FROM todolist WHERE status='В работе'")
-	//if err != nil {
-	//	fmt.Println("[dbconnect] Ошибка запроса в БД", err)
-	//}
-	//
-	//for rows.Next() {
-	//	err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
-	//	if err != nil {
-	//		fmt.Println("Ошибка сканирования строки результата", err)
-	//	}
-	//	status4 = append(status4, cell)
-	//}
-	//// status 4
-	//
-	//// status 5
-	//rows, err = db.Query("SELECT * FROM todolist WHERE status='Закрытие'")
-	//if err != nil {
-	//	fmt.Println("[dbconnect] Ошибка запроса в БД", err)
-	//}
-	//
-	//for rows.Next() {
-	//	err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
-	//	if err != nil {
-	//		fmt.Println("Ошибка сканирования строки результата", err)
-	//	}
-	//	status5 = append(status5, cell)
-	//}
-	//// status 5
-	//
-	//// status 6
-	//rows, err = db.Query("SELECT * FROM todolist WHERE status='Ждем оплаты'")
-	//if err != nil {
-	//	fmt.Println("[dbconnect] Ошибка запроса в БД", err)
-	//}
-	//
-	//for rows.Next() {
-	//	err = rows.Scan(&cell.Id, &cell.Visible, &cell.Client, &cell.DealTitle, &cell.DealDesc, &cell.Price, &cell.StartPeriod, &cell.EndPeriod, &cell.Status, &cell.Resul)
-	//	if err != nil {
-	//		fmt.Println("Ошибка сканирования строки результата", err)
-	//	}
-	//	status6 = append(status6, cell)
-	//}
-	//// status 6
+	allDataPage.StatusRegistry = StatusRegistryArray
+	allDataPage.ResultRegistry = ResultRegistryArray
 
 	toJson, err := json.Marshal(allDataPage)
 	if err != nil {
