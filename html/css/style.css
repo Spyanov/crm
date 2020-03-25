@@ -1,34 +1,168 @@
 body{
-    background-color: #000c75;
+    background-color: #1e1e2f;
+    font-family: 'Ubuntu', sans-serif;
 }
 
-.btnHeader{
-    font-size: .9rem;
+.btnHeader {
+    font-size: 1rem;
     text-align: center;
     font-weight: bold;
-    color: #fff;
-    margin-bottom: 1rem;
-    height: 4rem;
-    border: none;
-    background-color: #000c75;
-
+    color: #000000;
+    margin-bottom: 3rem;
+    height: 3rem;
 
 }
 
-.card .card-body .card-text {
-    font-size: .8rem;
-    font-weight: 400;
-    color: #747373;
-    text-align: center;
-    margin:0;
-    padding: 0;
-}
-
-.card-body {
-    min-height: 1px;
-    padding: 0.5rem;
+.stageHower0, .stageHower1, .stageHower2, .stageHower3, .stageHower4,.stageHower5 {
+    font-size: 1rem;
+    font-weight: bold;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .fa-save, .fa-window-close{
     font-size: 1.5rem;
+}
+
+.modal-header > h4{
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+
+}
+.modal-body{
+    text-align: justify;
+}
+
+
+
+.item{
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius:0.25rem;
+}
+
+.item-title, .item-desc, .item-price{
+    padding-bottom: .5rem;
+    padding-top: .5rem;
+}
+
+.item-title, .item-desc{
+    background-color: #ffffffdb;
+    color: #6b6b6b;
+}
+
+.item-title{
+    font-size: 0.9rem;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.item-desc{
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.item-client-name {
+    font-size: .8rem;
+    background-color: #27293dd1;
+    margin: -1px;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem 0.25rem 0 0;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+
+.item-price{
+    text-align: center;
+    font-size: .9rem;
+    color: #909090;
+    font-weight: bold;
+}
+
+.item-date{
+    font-size: .8rem;
+    text-align: center;
+    color: #909090;
+
+}
+
+
+
+.stage0 .item-desc, .stage0 .item-title, .stage0 .item-date, .stage0 .item-client-name, .stage0 .item-price {
+    background-color: #e1e1e1;
+    color: #000000;
+    border-bottom: none;
+}
+.stage0 .item-client-name, .stageHower0{
+    background-color: #fff;
+}
+
+.stage1 .item-desc, .stage1 .item-title, .stage1 .item-date, .stage1 .item-client-name, .stage1 .item-price {
+    background-color: #e1e1e1;
+    color: #000000;
+    border-bottom: none;
+}
+.stage1 .item-client-name, .stageHower1 {
+    background-color: #00aeff;
+}
+
+.stage2 .item-desc, .stage2 .item-title, .stage2 .item-date, .stage2 .item-client-name, .stage2 .item-price {
+    background-color: #e1e1e1;
+    color: #000000;
+    border-bottom: none;
+}
+.stage2 .item-client-name, .stageHower2 {
+    background-color: #004cff;
+}
+
+.stage3 .item-desc, .stage3 .item-title, .stage3 .item-date, .stage3 .item-client-name, .stage3 .item-price {
+    background-color: #e1e1e1;
+    color: #000000;
+    border-bottom: none;
+}
+.stage3 .item-client-name, .stageHower3 {
+    background-color: #007a5e;
+}
+
+.stage4 .item-desc, .stage4 .item-title, .stage4 .item-date, .stage4 .item-client-name, .stage4 .item-price {
+    background-color: #e1e1e1;
+    color: #000000;
+    border-bottom: none;
+}
+.stage4 .item-client-name, .stageHower4 {
+    background-color: #ff7f00;
+}
+
+
+.stage5 .item-desc, .stage5 .item-title, .stage5 .item-date, .stage5 .item-client-name, .stage5 .item-price {
+    background-color: #e1e1e1;
+    color: #000000;
+    border-bottom: none;
+}
+.stage5 .item-client-name, .stageHower5 {
+    background-color: #ff0029;
+}
+
+
+
+.separator0{
+    border-bottom: 2px solid #fff;
+}
+.separator1{
+    border-bottom: 2px solid #00aeff;
+}
+.separator2{
+    border-bottom: 2px solid #004cff;
+}
+.separator3{
+    border-bottom: 2px solid #007a5e;
+}
+.separator4{
+    border-bottom: 2px solid #ff7f00;
+}
+.separator5{
+    border-bottom: 2px solid #ff0029;
 }

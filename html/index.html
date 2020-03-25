@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>Material Design for Bootstrap</title>
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
 
   <!-- production-версия, оптимизированная для размера и скорости -->
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -24,45 +25,31 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-
-
-
-
-
-
-
 <div class="container-fluid" id="app">
-
-
-
-
-
-
-
-
-
+  <div class="row">
+    <div class="col-12">navbar</div>
+  </div>
   <div class="row">
     <div class="col-12">
       <div class="container-fluid">
         <div class="row">
-
-          <!-- status1 -->
-          <div  class="col-2" v-for="(column, count) in arrJson.dataArr">
-            <button class="w-100 btnHeader z-depth-1">{{column.columnTitle}}</button>
+          <!-- вывод задач -->
+          <div  class="col-lg-2" v-for="(column, count) in arrJson.dataArr" :class="'stage'+count">
+            <div class="w-100 btnHeader">
+              <h3 :class="'stageHower'+count">{{column.columnTitle}}</h3>
+              <hr :class="'separator'+count">
+            </div>
             <div v-for="todo in column.arrayInColumn">
               <render-item :client=todo.client :id="todo.id" :title="todo.dealTitle" :desc="todo.dealDesc" :price="todo.price" :start="todo.startPeriod" :end="todo.endPeriod" :status="todo.status"></render-item>
             </div>
-
           </div>
-          <!-- status1 -->
-
-
-      </div>
+          <!-- .вывод задач -->
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 
 
 
@@ -96,18 +83,36 @@
         status: String,
         result: String
       },
+      computed:{
+        calcStart(){
+          let st = new Date(this.start);
+          let start = st.toLocaleDateString();
+          return start
+        },
+        calcEnd(){
+          let end = new Date(this.end);
+          let endTime = end.toLocaleDateString();
+          return endTime
+        }
+      },
+
       template:`
-          <div  class="mb-3">
-            <div class="card">
-              <a data-toggle="modal" :data-target="'#modal'+this.id">
-                <div class="card-body" :id="'id'+this.id">
-                  <p class="card-text">{{this.client}}</p>
-                  <hr>
-                  <p class="card-title">{{this.title}}</p>
-                  <hr>
-                  <p class="card-text">{{this.price}}</p>
-                  <p class="card-text">{{this.start}} {{this.end}}</p>
-                  <p class="card-text">{{this.status}}</p>
+          <div  class="item">
+            <div>
+              <a data-toggle="modal" :data-target="'#modal'+this.id" class="color">
+                <div class="item-body" :id="'id'+this.id">
+
+                  <div class="item-client-name">{{this.client}}</div>
+
+                  <div class="item-title">{{this.title}}</div>
+
+                  <div class="item-desc">{{this.desc}}</div>
+
+
+                  <div class="item-price"><i class="fas fa-coins"></i> {{this.price}}</div>
+
+                  <div class="item-date">Начало: {{this.calcStart}} | Конец: {{this.calcEnd}}</div>
+
                 </div>
                </a>
             </div>
@@ -118,6 +123,20 @@
       <div class="modal fade" :id="'modal'+this.id" tabindex="-1" role="dialog" :aria-labelledby="'label'+id" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
+
+
+      <form action="" method="post">
+      <div class="container">
+        <div class="row">
+          <div class="col-8 title">{{this.title}}</div>
+          <div class="col-4">{{this.price}} <i class="fas fa-ruble-sign"></i></div>
+        </div>
+      </div>
+        <p><input type="submit"></p>
+      </form>
+
+
+
             <div class="modal-header">
               <h4 class="modal-title w-100" :id="'label'+id">{{this.title}}</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -148,7 +167,7 @@
         arrJson:[],
       },
       mounted(){
-        axios.get("http://localhost:3000/data").then( response =>{
+        axios.get("/data").then( response =>{
           this.arrJson = response.data;
         })
 
