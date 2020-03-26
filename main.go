@@ -66,7 +66,7 @@ type toDoList struct {
 	StartPeriod time.Time `json:"startPeriod"`
 	EndPeriod   time.Time `json:"endPeriod"`
 	Status      string    `json:"status"`
-	Resul       string    `json:"resul"`
+	Resul       string    `json:"result"`
 }
 
 type columnArray struct {
@@ -151,6 +151,41 @@ func getAllData(w http.ResponseWriter) {
 	w.Write(toJson)
 }
 
+func editData(w http.ResponseWriter, r *http.Request) {
+	var parceForm toDoList
+
+	var id = r.FormValue("id")
+
+	parceForm.Client = r.FormValue("client")
+	parceForm.DealTitle = r.FormValue("title")
+	parceForm.DealDesc = r.FormValue("desc")
+	var price = r.FormValue("price")
+
+	parceForm.Status = r.FormValue("status")
+	parceForm.Resul = r.FormValue("result")
+
+	log.Println("id =", parceForm.Id)
+
+	db := dbconnect()
+
+	queryString := "UPDATE todolist SET " +
+		"client='" + parceForm.Client + "'" +
+		", dealTitle='" + parceForm.DealTitle + "'" +
+		", dealDesc='" + parceForm.DealDesc + "'" +
+		", price=" + price +
+		", todolist.status='" + parceForm.Status + "'" +
+		", result='" + parceForm.Resul + "'" +
+		" WHERE id=" + id
+
+	log.Println(queryString)
+	_, err := db.Query(queryString)
+	if err != nil {
+		log.Println("ошибка перезаписи", err)
+	}
+
+	f_tpl().ExecuteTemplate(w, "index", nil)
+}
+
 func dbconnect() *sql.DB {
 	connectonString := username + ":" + password + "@tcp(" + host + ")/" + database + "?parseTime=true"
 
@@ -171,6 +206,7 @@ func dbconnect() *sql.DB {
 }
 
 func index(w http.ResponseWriter) {
+
 	f_tpl().ExecuteTemplate(w, "index", nil)
 }
 
@@ -183,6 +219,7 @@ func main() {
 
 	m.Get("/", index)
 	m.Get("/data", getAllData)
+	m.Post("/", editData)
 	m.RunOnAddr(":3000")
 
 }
