@@ -195,39 +195,39 @@ func insert(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func editData(w http.ResponseWriter, r *http.Request) {
-	var id = r.FormValue("id")
-	var parceForm toDoList
-	//если нет входящего ID то это новая задача иначе это изменение существующей
+func update(w http.ResponseWriter, r *http.Request) {
+	len := r.ContentLength
+	body := make([]byte, len)
+	r.Body.Read(body)
+	var result toDoList
 
-	parceForm.Client = r.FormValue("client")
-	parceForm.DealTitle = r.FormValue("title")
-	parceForm.DealDesc = r.FormValue("desc")
-	var price = r.FormValue("price")
-
-	parceForm.Status = r.FormValue("status")
-	parceForm.Resul = r.FormValue("result")
-
-	log.Println("id =", parceForm.Id)
-
-	db := dbconnect()
-
-	queryString := "UPDATE todolist SET " +
-		"client='" + parceForm.Client + "'" +
-		", dealTitle='" + parceForm.DealTitle + "'" +
-		", dealDesc='" + parceForm.DealDesc + "'" +
-		", price=" + price +
-		", todolist.status='" + parceForm.Status + "'" +
-		", result='" + parceForm.Resul + "'" +
-		" WHERE id=" + id
-
-	log.Println(queryString)
-	_, err := db.Query(queryString)
+	err := json.Unmarshal(body, &result)
 	if err != nil {
-		log.Println("ошибка перезаписи", err)
+		fmt.Println("error decode result", err)
 	}
 
-	f_tpl().ExecuteTemplate(w, "index", nil)
+	queryString := "UPDATE todolist SET " +
+		"client='" + result.Client + "'" +
+		", dealTitle='" + result.DealTitle + "'" +
+		", dealDesc='" + result.DealDesc + "'" +
+		", price=" + strconv.Itoa(result.Price) +
+		", todolist.status='" + result.Status + "'" +
+		", result='" + result.Resul + "'" +
+		" WHERE id=" + strconv.Itoa(result.Price)
+
+	log.Println(queryString)
+	//db := dbconnect()
+	//_, err = db.Query(queryString)
+	//if err != nil {
+	//	log.Println("ошибка перезаписи", err)
+	//}
+	//if err != nil {
+	//	log.Println("ошибка добавления новой записи", err)
+	//	w.WriteHeader(400)
+	//} else {
+	//	w.WriteHeader(201)
+	//}
+
 }
 
 func dbconnect() *sql.DB {
@@ -264,6 +264,7 @@ func main() {
 	m.Get("/", index)
 	m.Get("/data", getAllData)
 	m.Post("/insert", insert)
+	m.Post("/update", update)
 	m.RunOnAddr(":3000")
 
 }

@@ -26,7 +26,7 @@
 </head>
 <body>
 <div class="container-fluid" id="app">
-  <button @click="sendUpdate()">sdfsdfsddfds</button>
+
 
 
   <div class="row">
@@ -92,13 +92,18 @@
   <script type="text/javascript">
     Vue.component('new-item',{
       props:{
+        id:Number,
+        client:String,
+        title:String,
+        desc:String,
+        price:Number,
         statusArr: Array,
         resultArr: Array,
         statusIndex: Number,
       },
       data:function(){
           return{
-            //currentModalDialog:'add'+this.statusIndex,
+            currentId:null,
             currentClient:null,
             currentTitle:null,
             currentDesc:null,
@@ -110,7 +115,7 @@
           }
       },
       methods:{
-        sendUpdate:function(){
+        sendInsert:function(){
           $.ajax({
             url : "/insert",
             type: "POST",
@@ -145,9 +150,8 @@
           }).fail(function(data, textStatus, jqXHR) {
             alert("Не удалось записать: ");
           })
-        }
+        },
       },
-
       template: `
       <!-- Modal -->
       <div class="modal fade" :id="'add'+this.statusIndex" tabindex="-1" role="dialog" :aria-labelledby="'label'+this.statusIndex" aria-hidden="true">
@@ -219,7 +223,7 @@
       </div>
 
       <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="far fa-window-close"></i></button>
-      <button type="button" class="btn btn-primary btn-sm" @click="this.sendUpdate"><i class="far fa-save"></i></button>
+      <button type="button" class="btn btn-primary btn-sm" @click="this.sendInsert"><i class="far fa-save"></i></button>
       </div>
 
 
@@ -231,7 +235,7 @@
 
 
       `
-    });
+    })
 
 
     Vue.component('render-item',{
@@ -248,17 +252,58 @@
         statusArr: Array,
         resultArr: Array,
       },
-      computed:{
-        calcStart(){
-          let st = new Date(this.start);
-          let start = st.toLocaleDateString();
-          return start
-        },
-        calcEnd(){
-          let end = new Date(this.end);
-          let endTime = end.toLocaleDateString();
-          return endTime
-        }
+      data:function(){
+          return{
+            currentId:null,
+            currentClient:null,
+            currentTitle:null,
+            currentDesc:null,
+            currentPrice:null,
+            currentStart:null,
+            currentEnd:null,
+            currentStatus:null,
+            currentResult:null,
+          }
+      },
+
+      methosd:{
+        sendUpadte:function(){
+            $.ajax({
+              url : "/update",
+              type: "POST",
+
+              timeout:5000,
+
+              data:`{
+                  "id":"`+this.currentId +`",
+                  "client":"`+this.currentClient+`",
+                  "dealTitle":"`+this.currentTitle+`",
+                  "dealDesc":"`+this.currentDesc+`",
+                  "price":`+this.currentPrice+`,
+                  "status":"`+this.currentStatus+`",
+                  "result":"`+this.currentResult+`"}`,
+
+              contentType: false,
+
+              cache: false,
+              processData:false,
+
+
+            }).done(function(data, textStatus, jqXHR){ //
+              if (jqXHR.status == 201){
+  //              console.log("result =", jqXHR)
+                $('.modal').modal('hide')
+                app.loading();
+
+
+              } else {
+                alert("Что-то пошло не так: ")
+              }
+
+            }).fail(function(data, textStatus, jqXHR) {
+              alert("Не удалось записать: ");
+            })
+          }
       },
 
       template:`
@@ -300,13 +345,13 @@
       </div>
       <div class="row">
       <div class="col-12">
-      <input type="text" class="form-control mb-4" :placeholder="client" name="client" v-model:value="client">
+      <input type="text" class="form-control mb-4" :placeholder="client" name="client" v-model:value="currentClient">
 
       </div>
       </div>
       <div class="row">
       <div class="col-12">
-      <input type="text" class="form-control mb-4" :placeholder="title" name="title" v-model:value="title">
+      <input type="text" class="form-control mb-4" :placeholder="title" name="title" v-model:value="currentTitle">
 
       </div>
       </div>
@@ -354,7 +399,7 @@
       </div>
 
       <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="far fa-window-close"></i></button>
-      <button type="submit" class="btn btn-primary btn-sm"><i class="far fa-save"></i></button>
+      <button type="button" class="btn btn-primary btn-sm" @click="this.sendUpdate"><i class="far fa-save"></i></button>
       </form>
 
 
