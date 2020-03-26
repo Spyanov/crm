@@ -21,7 +21,7 @@ Vue.component('new-item',{
             //currentStart:null,
             //currentEnd:null,
             currentStatus:null,
-            currentResult:null,
+            currentResult:this.resultProp,
         }
     },
     methods:{

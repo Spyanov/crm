@@ -14,20 +14,20 @@ Vue.component('renderitem',{
     },
     data:function(){
         return{
-            currentId:null,
-            currentClient:null,
-            currentTitle:null,
-            currentDesc:null,
-            currentPrice:null,
+            currentId:this.id,
+            currentClient:this.client,
+            currentTitle:this.title,
+            currentDesc:this.desc,
+            currentPrice:this.price,
             currentStart:null,
             currentEnd:null,
-            currentStatus:null,
-            currentResult:null,
+            currentStatus:this.statusProp,
+            currentResult:this.resultProp,
         }
     },
 
     methods:{
-        sendUpadte:function n(){
+        sendUpdate:function(event){
             $.ajax({
                 url : "/update",
                 type: "POST",
@@ -35,7 +35,7 @@ Vue.component('renderitem',{
                 timeout:5000,
 
                 data:`{
-                  "id":"`+this.currentId +`",
+                  "id":`+this.currentId +`,
                   "client":"`+this.currentClient+`",
                   "dealTitle":"`+this.currentTitle+`",
                   "dealDesc":"`+this.currentDesc+`",
@@ -50,11 +50,9 @@ Vue.component('renderitem',{
 
 
             }).done(function(data, textStatus, jqXHR){ //
-                if (jqXHR.status == 201){
+                if (jqXHR.status == 200){
                     $('.modal').modal('hide')
                     app.loading();
-
-
                 } else {
                     alert("Что-то пошло не так: ")
                 }
@@ -67,105 +65,93 @@ Vue.component('renderitem',{
 
     template:`
           <div  class="item">
-            <div>
-              <a data-toggle="modal" :data-target="'#modal'+this.id" class="color">
-                <div class="item-body" :id="'id'+this.id">
-
-                  <div class="item-client-name">{{this.client}}</div>
-
-                  <div class="item-title">{{this.title}}</div>
-
-                  <div class="item-desc">{{this.desc}}</div>
-
-
-                  <div class="item-price"><i class="fas fa-coins"></i> {{this.price}}</div>
-
-
-                </div>
-               </a>
-            </div>
-
-
-
-              <!-- Modal -->
-              <div class="modal fade" :id="'modal'+this.id" tabindex="-1" role="dialog" :aria-labelledby="'label'+id" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-
-
-
-              <form action="/" method="POST" :id="'updateItem'+id" class="text-center border border-light p-5">
-              <div class="container inputBlock">
-              <div class="row">
-              <div class="col-12" >
-              </div>
-                      <input name="id" :value="id" class="hide">
-              </div>
-              <div class="row">
-              <div class="col-12">
-              <input type="text" class="form-control mb-4" :placeholder="client" name="client" v-model:value="currentClient">
-
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-12">
-              <input type="text" class="form-control mb-4" :placeholder="title" name="title" v-model:value="currentTitle">
-
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-12">
-              <input type="text" class="form-control mb-4" :placeholder="desc" name="desc" v-model:value="desc">
-
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-12">
-              <input type="number" class="form-control mb-4" :placeholder="price" name="price" v-model:value="price" maxlength="7">
-
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-12">
-              <input type="text" class="form-control mb-4" placeholder="Начало" name="start" >
-
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-12">
-              <input type="text" class="form-control mb-4" placeholder="Конец" name="end">
-
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-12">
-              <select class="browser-default custom-select mb-4" v-model="statusProp" name="status">
-              <option value="" disabled="">Результат</option>
-              <option v-for="statusList in this.statusArr" :value="statusList" >{{statusList}}</option>
-              </select>
-
-              </div>
-              </div>
-              <div class="row">
-              <div class="col-12">
-              <select class="browser-default custom-select mb-4" v-model="resultProp" name="result">
-              <option value="" disabled="">Стадия</option>
-              <option v-for="resultList in this.resultArr" :value="resultList" >{{resultList}}</option>
-              </select>
-              </div>
-              </div>
-              </div>
-
-              <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="far fa-window-close"></i></button>
-              <button type="button" class="btn btn-primary btn-sm" v-on:click="this.sendUpdate"><i class="far fa-save"></i></button>
-              </form>
-
-
+               <!-- item  -->
+               <div>
+                  <a data-toggle="modal" :data-target="'#modal'+this.id" class="color">
+                    <div class="item-body" :id="'id'+this.id">
+                      <div class="item-client-name">{{this.client}}</div>
+                      <div class="item-title">{{this.title}}</div>
+                      <div class="item-desc">{{this.desc}}</div>
+                      <div class="item-price"><i class="fas fa-coins"></i> {{this.price}}</div>
                     </div>
-                  </div>
-                </div>
+                   </a>
+               </div>
+              <!-- item  -->
+              <!-- Modal item -->
+              <div class="modal fade" :id="'modal'+this.id" tabindex="-1" role="dialog" :aria-labelledby="'label'+id" aria-hidden="true">
+                 <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <form action="/" method="POST" :id="'updateItem'+id" class="text-center border border-light p-5">
+                        <div class="container inputBlock">
+                          <div class="row">
+                          <div class="col-12" >
+                              </div>
+                                      <input name="id" v-bind:value="currentId" class="hide">
+                              </div>
+                          <div class="row">
+                          <div class="col-12">
+                          <input type="text" class="form-control mb-4" :placeholder="client" name="client" v-model:value="currentClient">
+            
+                          </div>
+                          </div>
+                          <div class="row">
+                          <div class="col-12">
+                          <input type="text" class="form-control mb-4" :placeholder="title" name="title" v-model:value="currentTitle">
+            
+                          </div>
+                          </div>
+                          <div class="row">
+                          <div class="col-12">
+                          <input type="text" class="form-control mb-4" :placeholder="desc" name="desc" v-model:value="currentDesc">
+            
+                          </div>
+                          </div>
+                          <div class="row">
+                          <div class="col-12">
+                          <input type="number" class="form-control mb-4" :placeholder="price" name="price" v-model:value="currentPrice" maxlength="7">
+            
+                          </div>
+                          </div>
+                          <div class="row">
+                          <div class="col-12">
+                          <input type="text" class="form-control mb-4" placeholder="Начало" name="start" >
+            
+                          </div>
+                          </div>
+                          <div class="row">
+                          <div class="col-12">
+                          <input type="text" class="form-control mb-4" placeholder="Конец" name="end">
+            
+                          </div>
+                          </div>
+                          <div class="row">
+                          <div class="col-12">
+                          <select class="browser-default custom-select mb-4" v-model="currentStatus" name="status">
+                          <option value="" disabled="">Результат</option>
+                          <option v-for="statusList in this.statusArr" :value="statusList" >{{statusList}}</option>
+                          </select>
+            
+                          </div>
+                          </div>
+                          <div class="row">
+                          <div class="col-12">
+                          <select class="browser-default custom-select mb-4" v-model="currentResult" name="result">
+                          <option value="" disabled="">Стадия</option>
+                          <option v-for="resultList in this.resultArr" :value="resultList" >{{resultList}}</option>
+                          </select>
+                          </div>
+                          </div>
+                          </div>
+            
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="far fa-window-close"></i></button>
+                        <button type="button" class="btn btn-primary btn-sm" @click="this.sendUpdate"><i class="far fa-save"></i></button>
+                      </form>
+                    </div>
+                 </div>
               </div>
-              <!-- .Modal -->
+               <!-- .Modal item -->
+          </div>
+             
 
 
               `

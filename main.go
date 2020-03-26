@@ -213,20 +213,17 @@ func update(w http.ResponseWriter, r *http.Request) {
 		", price=" + strconv.Itoa(result.Price) +
 		", todolist.status='" + result.Status + "'" +
 		", result='" + result.Resul + "'" +
-		" WHERE id=" + strconv.Itoa(result.Price)
+		" WHERE id=" + strconv.Itoa(result.Id)
 
 	log.Println(queryString)
-	//db := dbconnect()
-	//_, err = db.Query(queryString)
-	//if err != nil {
-	//	log.Println("ошибка перезаписи", err)
-	//}
-	//if err != nil {
-	//	log.Println("ошибка добавления новой записи", err)
-	//	w.WriteHeader(400)
-	//} else {
-	//	w.WriteHeader(201)
-	//}
+	db := dbconnect()
+	_, err = db.Query(queryString)
+	if err != nil {
+		log.Println("ошибка изменения записи", err)
+		w.WriteHeader(400)
+	} else {
+		w.WriteHeader(200)
+	}
 
 }
 
