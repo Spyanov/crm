@@ -9,6 +9,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -67,6 +68,17 @@ type toDoList struct {
 	EndPeriod   time.Time `json:"endPeriod"`
 	Status      string    `json:"status"`
 	Resul       string    `json:"result"`
+}
+
+type parseInsert struct {
+	Client    string `json:"client"`
+	DealTitle string `json:"dealTitle"`
+	DealDesc  string `json:"dealDesc"`
+	Price     int    `json:"price"`
+	//	StartPeriod time.Time `json:"startPeriod"`
+	//	EndPeriod   time.Time `json:"endPeriod"`
+	Status string `json:"status"`
+	Resul  string `json:"result"`
 }
 
 type columnArray struct {
@@ -151,10 +163,42 @@ func getAllData(w http.ResponseWriter) {
 	w.Write(toJson)
 }
 
-func editData(w http.ResponseWriter, r *http.Request) {
-	var parceForm toDoList
+func insert(w http.ResponseWriter, r *http.Request) {
+	len := r.ContentLength
+	body := make([]byte, len)
+	r.Body.Read(body)
+	var result parseInsert
 
+	err := json.Unmarshal(body, &result)
+	if err != nil {
+		fmt.Println("error decode result", err)
+	}
+
+	db := dbconnect()
+	queryString := "INSERT todolist SET " +
+		"client='" + result.Client + "'" +
+		", visible=1" +
+		", dealTitle='" + result.DealTitle + "'" +
+		", dealDesc='" + result.DealDesc + "'" +
+		", price=" + strconv.Itoa(result.Price) +
+		", todolist.status='" + result.Status + "'" +
+		", result='" + result.Resul + "'"
+
+	log.Println(queryString)
+	_, err = db.Query(queryString)
+	if err != nil {
+		log.Println("ошибка добавления новой записи", err)
+		w.WriteHeader(400)
+	} else {
+		w.WriteHeader(201)
+	}
+
+}
+
+func editData(w http.ResponseWriter, r *http.Request) {
 	var id = r.FormValue("id")
+	var parceForm toDoList
+	//если нет входящего ID то это новая задача иначе это изменение существующей
 
 	parceForm.Client = r.FormValue("client")
 	parceForm.DealTitle = r.FormValue("title")
@@ -219,7 +263,9 @@ func main() {
 
 	m.Get("/", index)
 	m.Get("/data", getAllData)
-	m.Post("/", editData)
+	m.Post("/insert", insert)
 	m.RunOnAddr(":3000")
 
 }
+
+//todo есть баг при изменении результата работы - проверить

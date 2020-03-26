@@ -171,7 +171,9 @@ body{
     color: white;
 }
 
-
+h3{
+    cursor: pointer;
+}
 
 
 
