@@ -60,6 +60,34 @@ Vue.component('renderitem',{
             }).fail(function(data, textStatus, jqXHR) {
                 alert("Не удалось записать: ");
             })
+        },
+        delItem:function () {
+            $.ajax({
+                url : "/del",
+                type: "POST",
+
+                timeout:5000,
+
+                data:`{"id":`+this.currentId +`}`,
+
+                contentType: false,
+
+                cache: false,
+                processData:false,
+
+
+            }).done(function(data, textStatus, jqXHR){ //
+                if (jqXHR.status == 200){
+                    $('.modal').modal('hide')
+                    console.log("запись" + this.currentId +" удалена");
+                    app.loading();
+                } else {
+                    alert("Что-то пошло не так: ")
+                }
+
+            }).fail(function(data, textStatus, jqXHR) {
+                alert("Не удалось записать: ");
+            })
         }
     },
 
@@ -81,10 +109,15 @@ Vue.component('renderitem',{
               <div class="modal fade" :id="'modal'+this.id" tabindex="-1" role="dialog" :aria-labelledby="'label'+id" aria-hidden="true">
                  <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
+                    
+                        <div class="d-flex flex-row-reverse">
+                            <button type="button" class="btn btn-danger btn-sm" @click="this.delItem">DELETE</button>
+                        </div>
+                        
                       <form action="/" method="POST" :id="'updateItem'+id" class="text-center border border-light p-5">
                         <div class="container inputBlock">
                           <div class="row">
-                          <div class="col-12" >
+                          <div class="col-12 " >
                               </div>
                                       <input name="id" v-bind:value="currentId" class="hide">
                               </div>
@@ -143,8 +176,19 @@ Vue.component('renderitem',{
                           </div>
                           </div>
             
-                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="far fa-window-close"></i></button>
-                        <button type="button" class="btn btn-primary btn-sm" @click="this.sendUpdate"><i class="far fa-save"></i></button>
+                        <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6">
+                            <button type="button" class="btn btn-light btn-lg" data-dismiss="modal">Отмена</button>
+                            <button type="button" class="btn btn-primary btn-lg" @click="this.sendUpdate">Сохранить</button></div>
+                        </div>
+                        <div class="row">
+
+                        </div>
+                        
+                        
+                        <br>
+                        
                       </form>
                     </div>
                  </div>

@@ -66,6 +66,7 @@ Vue.component('new-item',{
                 alert("Не удалось записать: ");
             })
         },
+
     },
     template: `
       <!-- Modal -->

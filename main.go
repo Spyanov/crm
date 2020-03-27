@@ -227,6 +227,31 @@ func update(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func del(w http.ResponseWriter, r *http.Request) {
+	len := r.ContentLength
+	body := make([]byte, len)
+	r.Body.Read(body)
+	var result toDoList
+
+	err := json.Unmarshal(body, &result)
+	if err != nil {
+		fmt.Println("error decode result", err)
+	}
+
+	queryString := "DELETE FROM todolist WHERE id=" + strconv.Itoa(result.Id)
+
+	log.Println(queryString)
+	db := dbconnect()
+	_, err = db.Query(queryString)
+	if err != nil {
+		log.Println("ошибка удаления записи", err)
+		w.WriteHeader(400)
+	} else {
+		w.WriteHeader(200)
+	}
+
+}
+
 func dbconnect() *sql.DB {
 	connectonString := username + ":" + password + "@tcp(" + host + ")/" + database + "?parseTime=true"
 
@@ -262,6 +287,7 @@ func main() {
 	m.Get("/data", getAllData)
 	m.Post("/insert", insert)
 	m.Post("/update", update)
+	m.Post("/del", del)
 	m.RunOnAddr(":3000")
 
 }
