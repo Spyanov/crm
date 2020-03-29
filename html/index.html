@@ -29,56 +29,96 @@
   <script type="text/javascript" src="js/jquery.min.js"></script>
 </head>
 <body>
-<div class="container-fluid" id="app">
+
+<div id="app">
+  <div class="container-fluid mb-2">
+    <div class="row">
+      <div class="col-12">
+        <!--Navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark">
+
+          <!-- Navbar brand -->
+          <a class="navbar-brand" href="#">XKC crm</a>
+
+          <!-- Collapse button -->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+                  aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- Collapsible content -->
+          <div class="collapse navbar-collapse" id="basicExampleNav">
+
+            <!-- Links -->
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="/">Текущие дела
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/statistic">Статистика</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/closed">Закрытые</a>
+              </li>
 
 
 
-  <div class="row">
-    <div class="col-12">navbar</div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <div class="container-fluid">
-        <div class="row">
+            </ul>
 
-        </div>
-        <div class="row">
-          <!-- вывод задач -->
-          <div  class="col-lg-2" v-for="(column, count) in arrJson.dataArr" :class="'stage'+count">
-            <div class="w-100 btnHeader">
-              <h3 :class="'stageHower'+count" data-toggle="modal" :data-target="'#add'+count">{{column.columnTitle}}</h3>
-              <hr :class="'separator'+count">
-            </div>
-            <div v-for="todo in column.arrayInColumn">
-              <renderitem :id="todo.id"
-                           :client="todo.client"
-                           :title="todo.dealTitle"
-                           :desc="todo.dealDesc"
-                           :price="todo.price"
-                           :status-Prop="todo.status"
-                           :result-Prop="todo.result"
-                           :result-Arr="arrJson.resultRegistry"
-                           :status-arr="arrJson.statusRegistry"
-              ></renderitem>
-            </div>
           </div>
-          <!-- .вывод задач -->
+          <!-- Collapsible content -->
 
-          <!-- вывод модальных окон для новых задач -->
+        </nav>
+        <!--/.Navbar-->
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid" >
+    <div class="row">
+      <div class="col-12">
+        <div class="container-fluid">
+          <div class="row">
 
-          <new-item v-for="(statusList, count) in arrJson.statusRegistry"
-                    :status-Prop="statusList"
-                    :result-Prop="arrJson.resultRegistry[2]"
-                    :status-index="count"
-                    :status-Arr="arrJson.statusRegistry"
-                    :result-Arr="arrJson.resultRegistry"
-          ></new-item>
+          </div>
+          <div class="row">
+            <!-- вывод задач -->
+            <div  class="col-lg-2" v-for="(column, count) in arrJson.dataArr" :class="'stage'+count">
+              <div class="w-100 btnHeader">
+                <h3 :class="'stageHower'+count" data-toggle="modal" :data-target="'#add'+count">{{column.columnTitle}}</h3>
+                <hr :class="'separator'+count">
+              </div>
+              <div v-for="todo in column.arrayInColumn">
+                <renderitem :id="todo.id"
+                             :client="todo.client"
+                             :title="todo.dealTitle"
+                             :desc="todo.dealDesc"
+                             :price="todo.price"
+                             :status-Prop="todo.status"
+                             :result-Prop="todo.result"
+                             :result-Arr="arrJson.resultRegistry"
+                             :status-arr="arrJson.statusRegistry"
+                ></renderitem>
+              </div>
+            </div>
+            <!-- .вывод задач -->
+
+            <!-- вывод модальных окон для новых задач -->
+
+            <new-item v-for="(statusList, count) in arrJson.statusRegistry"
+                      :status-Prop="statusList"
+                      :result-Prop="arrJson.resultRegistry[2]"
+                      :status-index="count"
+                      :status-Arr="arrJson.statusRegistry"
+                      :result-Arr="arrJson.resultRegistry"
+            ></new-item>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 
 
 

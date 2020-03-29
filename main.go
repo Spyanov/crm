@@ -51,6 +51,8 @@ func f_tpl() *template.Template {
 
 	tmpl, err := template.New("").Delims("[[[", "]]]").ParseFiles(
 		"html/index.html",
+		"html/statistic.html",
+		"html/closed.html",
 	)
 
 	f_checkErr(err)
@@ -93,6 +95,10 @@ type page struct {
 	ResultRegistry []string      `json:"resultRegistry"`
 }
 
+type staisctic struct {
+	Closed []toDoList `json:"closed"`
+}
+
 func getAllData(w http.ResponseWriter) {
 
 	db := dbconnect()
@@ -120,7 +126,7 @@ func getAllData(w http.ResponseWriter) {
 		}
 
 		// запрос на выборку всех данных по текущему статусу
-		rowsArrayInColumn, err := db.Query("SELECT * FROM todolist WHERE status ='" + currentStatus + "'")
+		rowsArrayInColumn, err := db.Query("SELECT * FROM todolist WHERE status ='" + currentStatus + "' AND result='В работе'")
 		if err != nil {
 			log.Println("ошибка выборки списка задач из БД по критерию = ", currentStatus, ", ошибка: ", err)
 		}
@@ -252,6 +258,34 @@ func del(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func statistic(w http.ResponseWriter, r *http.Request) {
+	f_tpl().ExecuteTemplate(w, "statistic", nil)
+}
+
+func getClosed() []byte {
+
+	var closedList staisctic
+	var current toDoList
+
+	db := dbconnect()
+	rows, err := db.Query("SELECT * FROM todolist WHERE result='Провальная сделка' OR result='Успешная сделка'")
+	for rows.Next() {
+		err = rows.Scan(&current.Id, &current.Visible, &current.Client, &current.DealTitle, &current.DealDesc, &current.Price, &current.StartPeriod, &current.EndPeriod, &current.Status, &current.Resul)
+		closedList.Closed = append(closedList.Closed, current)
+	}
+
+	result, err := json.Marshal(closedList)
+	if err != nil {
+		log.Println("[getClosed] ошибка преобразования в json", err)
+	}
+
+	return result
+}
+
+func closed(w http.ResponseWriter, r *http.Request) {
+	f_tpl().ExecuteTemplate(w, "closed", nil)
+}
+
 func dbconnect() *sql.DB {
 	connectonString := username + ":" + password + "@tcp(" + host + ")/" + database + "?parseTime=true"
 
@@ -284,9 +318,14 @@ func main() {
 	fmt.Println("run")
 
 	m.Get("/", index)
+	m.Get("/closed", closed)
+	m.Get("/statistic", statistic)
+
 	m.Get("/data", getAllData)
+	m.Get("/closedData", getClosed)
 	m.Post("/insert", insert)
 	m.Post("/update", update)
+
 	m.Post("/del", del)
 	m.RunOnAddr(":3000")
 
